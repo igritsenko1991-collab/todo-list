@@ -30,7 +30,11 @@ todos = todos.filter(function(todo) {
 
 // Сохраняем задачи в localStorage
 function saveTodos() {
-  localStorage.setItem("todos", JSON.stringify(todos));
+  try {
+      localStorage.setItem("todos", JSON.stringify(todos));
+  } catch (error) {
+      console.error("Не удалось сохранить задачи:", error);
+  }
 }
 
 //Обновляем счетчик
@@ -78,6 +82,7 @@ function renderTodos() {
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
     checkbox.checked = todo.completed;
+    checkbox.setAttribute("aria-label", `Выполнена задача: ${todo.text}`);
 
     const taskTextElement = document.createElement("span");
     taskTextElement.textContent = todo.text;
@@ -99,7 +104,7 @@ function renderTodos() {
       todo.completed = checkbox.checked;
 
       saveTodos();
-      updateCount();
+      renderTodos();
     });
 
     deleteBtn.addEventListener("click", function () {
